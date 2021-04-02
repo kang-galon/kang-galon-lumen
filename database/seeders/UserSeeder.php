@@ -17,7 +17,7 @@ class UserSeeder extends Seeder
     public function run()
     {
         // Client
-        DB::table('user')->insert([
+        DB::table('users')->insert([
             'phone_number' => '+6289696121212',
             'name' => 'Client',
             'uid' => Str::random(28),
@@ -26,7 +26,7 @@ class UserSeeder extends Seeder
         ]);
 
         // Depot
-        DB::table('user')->insert([
+        DB::table('users')->insert([
             'phone_number' => '+6289696454545',
             'name' => 'Depot',
             'uid' => Str::random(28),

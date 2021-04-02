@@ -17,10 +17,22 @@
 //     return $router->app->version();
 // });
 
+// Auth Client
 $router->group(['middleware' => 'auth', 'namespace' => 'Client', 'prefix' => 'client'], function () use ($router) {
     $router->get('/', ['uses' => 'ClientController@getProfile']);
 });
 
+// Auth Depot
+$router->group(['middleware' => 'auth', 'namespace' => 'Depot', 'prefix' => 'depot'], function () use ($router) {
+    $router->get('/', ['uses' => 'DepotController@getProfile']);
+});
+
+// No Auth - Client
 $router->group(['namespace' => 'Client', 'prefix' => 'client'], function () use ($router) {
+    $router->post('/register', ['uses' => 'AuthController@register']);
+});
+
+// No Auth - Depot
+$router->group(['namespace' => 'Depot', 'prefix' => 'depot'], function () use ($router) {
     $router->post('/register', ['uses' => 'AuthController@register']);
 });

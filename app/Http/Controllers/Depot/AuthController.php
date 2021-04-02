@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Client;
+namespace App\Http\Controllers\Depot;
 
 use App\Exceptions\ResponseException;
 use App\Http\Controllers\Controller;
+use App\Models\Depot;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Kreait\Laravel\Firebase\Facades\Firebase;
@@ -16,6 +17,8 @@ class AuthController extends Controller
         $this->invalidValidResponse($request, [
             'phone_number' => 'required|numeric|starts_with:+628|unique:users,phone_number',
             'name' => 'required',
+            'location' => 'required',
+            'address' => 'required',
             'uid' => 'required',
             'token' => 'required'
         ]);
@@ -39,6 +42,13 @@ class AuthController extends Controller
             'status' => 2,
         ]);
 
-        return $this->response(null, 'Registration client success', 201);
+        Depot::create([
+            'phone_number' => $request->phone_number,
+            'address' => $request->address,
+            'location' => $request->location,
+            'is_open' => false
+        ]);
+
+        return $this->response(null, 'Registration depot success', 201);
     }
 }
