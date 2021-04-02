@@ -17,6 +17,7 @@ class CreateDepotsTable extends Migration
             $table->string('phone_number')->primary();
             $table->string('location');
             $table->text('address');
+            $table->integer('price')->default(5000);
             $table->boolean('is_open')->default(false);
             $table->timestamps();
 

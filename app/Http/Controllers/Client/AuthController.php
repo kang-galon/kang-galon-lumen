@@ -30,6 +30,9 @@ class AuthController extends Controller
             if ($uid != $request->uid) {
                 throw new ResponseException('Invalid UID');
             }
+
+            // update name
+            $auth->updateUser($uid, ['displayName' => $request->name]);
         }
 
         User::create([

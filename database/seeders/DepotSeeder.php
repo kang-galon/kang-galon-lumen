@@ -17,6 +17,8 @@ class DepotSeeder extends Seeder
         DB::table('depots')->insert([
             'phone_number' => '+6289696454545',
             'location' => '-0.9265289528497486, 100.43368287661342',
+            'address' => 'Jalan jalan heya heyaaa',
+            'price' => 5000,
             'is_open' => true
         ]);
     }

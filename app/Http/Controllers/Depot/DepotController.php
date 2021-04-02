@@ -17,6 +17,8 @@ class DepotController extends Controller
             'phone_number' => $user->phone_number,
             'location' => $depot->location,
             'address' => $depot->address,
+            'price' => $depot->price,
+            'price_description' => 'Rp. ' . number_format($depot->price),
             'is_open' => $depot->is_open,
             'is_open_description' => $depot->is_open ? 'Buka' : 'Tutup',
             'status' => $user->status,
