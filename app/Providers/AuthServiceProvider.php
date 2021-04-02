@@ -4,8 +4,9 @@ namespace App\Providers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use Kreait\Laravel\Firebase\Facades\Firebase;
+use Lcobucci\JWT\UnencryptedToken;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -35,8 +36,17 @@ class AuthServiceProvider extends ServiceProvider
             $header = $request->header('Authorization');
 
             if ($header) {
-                $apiToken = explode(' ', $header)[1];
-                return User::where('api_token', $apiToken)->first();
+                try {
+                    $apiToken = explode(' ', $header)[1];
+                    $auth = Firebase::auth();
+                    $verifiedToken = $auth->verifyIdToken($apiToken);
+
+                    if ($verifiedToken instanceof UnencryptedToken) {
+                        $uid = $verifiedToken->claims()->get('sub');
+                        return User::where('uid', $uid)->first();
+                    }
+                } catch (\Exception $e) {
+                }
             }
         });
     }

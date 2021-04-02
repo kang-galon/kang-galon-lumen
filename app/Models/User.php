@@ -13,7 +13,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 {
     use Authenticatable, Authorizable, HasFactory;
 
+    public $incrementing = false;
     protected $primaryKey = 'phone_number';
+    protected $keyType = 'string';
     protected $table = 'user';
 
     /**
@@ -24,7 +26,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     protected $fillable = [
         'phone_number',
         'name',
-        'api_token',
+        'uid',
         'status'
     ];
 }

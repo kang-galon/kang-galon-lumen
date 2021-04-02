@@ -18,7 +18,7 @@
 // });
 
 $router->group(['middleware' => 'auth', 'namespace' => 'Client', 'prefix' => 'client'], function () use ($router) {
-    $router->get('/login', ['uses' => 'AuthController@login']);
+    $router->get('/', ['uses' => 'ClientController@getProfile']);
 });
 
 $router->group(['namespace' => 'Client', 'prefix' => 'client'], function () use ($router) {

@@ -21,6 +21,7 @@ class Handler extends ExceptionHandler
         HttpException::class,
         ModelNotFoundException::class,
         ValidationException::class,
+        ResponseException::class,
     ];
 
     /**
@@ -49,6 +50,22 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
+        if ($exception instanceof ValidationException) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid data',
+                'data' => $exception->validator->errors(),
+            ], $exception->status);
+        }
+
+        if ($exception instanceof ResponseException) {
+            return response()->json([
+                'success' => false,
+                'message' => $exception->getMessage(),
+                'data' => null,
+            ], $exception->status);
+        }
+
         return parent::render($request, $exception);
     }
 }

@@ -4,33 +4,28 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 use Laravel\Lumen\Routing\Controller as BaseController;
 
 class Controller extends BaseController
 {
-    protected function invalidValidResponse(Request $request, array $validate, string $message = 'Invalid validate')
+    protected function invalidValidResponse(Request $request, array $validate)
     {
         $validator = Validator::make($request->all(), $validate);
 
         if ($validator->fails()) {
-            $data = [];
-
-            // get first error message
-            $errors = json_decode($validator->errors(), true);
-            $keys = array_keys($errors);
-
-            foreach ($keys as $key) {
-                array_push($data, [
-                    $key => $errors[$key][0]
-                ]);
-                error_log(json_encode([$key => $errors[$key][0]]));
-            }
-
-            return response()->json([
-                'success' => false,
-                'message' => $message,
-                'data' => $data
-            ], 422);
+            throw new ValidationException($validator);
         }
+
+        return null;
+    }
+
+    protected function response(?array $data, string $message = 'Success', int $statusCode = 200)
+    {
+        return response()->json([
+            'success' => true,
+            'message' => $message,
+            'data' => $data
+        ], $statusCode);
     }
 }

@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
     {
         // Client
         DB::table('user')->insert([
-            'phone_number' => '089696121212',
+            'phone_number' => '+6289696121212',
             'name' => 'Client',
             'uid' => Str::random(28),
             'status' => 2,
@@ -27,7 +27,7 @@ class UserSeeder extends Seeder
 
         // Depot
         DB::table('user')->insert([
-            'phone_number' => '089696454545',
+            'phone_number' => '+6289696454545',
             'name' => 'Depot',
             'uid' => Str::random(28),
             'status' => 1,
