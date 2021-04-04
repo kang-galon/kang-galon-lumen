@@ -12,6 +12,20 @@ use Lcobucci\JWT\UnencryptedToken;
 
 class AuthController extends Controller
 {
+    public function checkUser(Request $request)
+    {
+        $this->invalidValidResponse($request, [
+            'phone_number' => 'required|numeric|starts_with:+628',
+        ]);
+
+        $user = User::where('phone_number', $request->phone_number)->first();
+        if ($user == null) {
+            return $this->response(null, 'Phone number doesn\'t exist', 404);
+        }
+
+        return $this->response(null, 'Phone number exist');
+    }
+
     public function register(Request $request)
     {
         $this->invalidValidResponse($request, [

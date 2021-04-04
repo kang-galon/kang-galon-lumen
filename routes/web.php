@@ -29,10 +29,12 @@ $router->group(['middleware' => 'auth', 'namespace' => 'Depot', 'prefix' => 'dep
 
 // No Auth - Client
 $router->group(['namespace' => 'Client', 'prefix' => 'client'], function () use ($router) {
+    $router->post('/check-user', ['uses' => 'AuthController@checkUser']);
     $router->post('/register', ['uses' => 'AuthController@register']);
 });
 
 // No Auth - Depot
 $router->group(['namespace' => 'Depot', 'prefix' => 'depot'], function () use ($router) {
+    $router->post('/check-user', ['uses' => 'AuthController@checkUser']);
     $router->post('/register', ['uses' => 'AuthController@register']);
 });
