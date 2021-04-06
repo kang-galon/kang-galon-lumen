@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Depot;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Kreait\Laravel\Firebase\Facades\Firebase;
 use Lcobucci\JWT\UnencryptedToken;
 
@@ -33,6 +34,7 @@ class AuthController extends Controller
             'name' => 'required',
             'location' => 'required',
             'address' => 'required',
+            'image' => 'required|image|mimes:jpg,jpeg,png',
             'uid' => 'required',
             'token' => 'required'
         ]);
@@ -51,6 +53,12 @@ class AuthController extends Controller
             // update name
             $auth->updateUser($uid, ['displayName' => $request->name]);
         }
+
+        // save image to storage
+        $file = $request->file('image');
+        $mime = $file->getClientOriginalExtension();
+        $fileName = $request->phone_number . '.' . $mime;
+        Storage::putFileAs('depot', $request->file('image'), $fileName);
 
         User::create([
             'phone_number' => $request->phone_number,

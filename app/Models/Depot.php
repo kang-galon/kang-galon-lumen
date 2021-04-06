@@ -17,4 +17,9 @@ class Depot extends Model
         'address',
         'is_open'
     ];
+
+    public function getImageAttribute()
+    {
+        return url('img/depot/' . $this->phone_number);
+    }
 }

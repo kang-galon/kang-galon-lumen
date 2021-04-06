@@ -21,7 +21,7 @@ class CreateDepotsTable extends Migration
             $table->boolean('is_open')->default(false);
             $table->timestamps();
 
-            $table->foreign('phone_number')->references('phone_number')->on('users');
+            $table->foreign('phone_number')->references('phone_number')->on('users')->cascadeOnDelete()->cascadeOnUpdate();
         });
     }
 

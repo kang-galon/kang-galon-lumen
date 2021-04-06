@@ -20,6 +20,7 @@
 // Auth Client
 $router->group(['middleware' => 'auth', 'namespace' => 'Client', 'prefix' => 'client'], function () use ($router) {
     $router->get('/', ['uses' => 'ClientController@getProfile']);
+    $router->patch('/', ['uses' => 'ClientController@updateProfile']);
 });
 
 // Auth Depot
@@ -38,3 +39,6 @@ $router->group(['namespace' => 'Depot', 'prefix' => 'depot'], function () use ($
     $router->post('/check-user', ['uses' => 'AuthController@checkUser']);
     $router->post('/register', ['uses' => 'AuthController@register']);
 });
+
+// No Auth - Public
+$router->get('/img/{type}/{fileName}', ['uses' => 'ImageController@getImage']);
