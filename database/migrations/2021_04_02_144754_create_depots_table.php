@@ -15,6 +15,7 @@ class CreateDepotsTable extends Migration
     {
         Schema::create('depots', function (Blueprint $table) {
             $table->string('phone_number', 15)->primary();
+            $table->string('image')->nullable();
             $table->string('location');
             $table->text('address');
             $table->integer('price')->default(5000);

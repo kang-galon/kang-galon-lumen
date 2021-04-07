@@ -21,6 +21,7 @@ class Depot extends Model
     protected $fillable = [
         'phone_number',
         'location',
+        'image',
         'address',
         'is_open'
     ];

@@ -6,9 +6,11 @@ use App\Exceptions\ResponseException;
 use App\Http\Controllers\Controller;
 use App\Models\Depot;
 use App\Models\User;
+use Illuminate\Http\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Kreait\Laravel\Firebase\Facades\Firebase;
+use Kreait\Laravel\Firebase\FirebaseProject;
 use Lcobucci\JWT\UnencryptedToken;
 
 class AuthController extends Controller
@@ -58,7 +60,21 @@ class AuthController extends Controller
         $file = $request->file('image');
         $mime = $file->getClientOriginalExtension();
         $fileName = $request->phone_number . '.' . $mime;
-        Storage::putFileAs('depot', $request->file('image'), $fileName);
+        $path = Storage::putFileAs('depot', $request->file('image'), $fileName);
+
+        // upload to firebase
+        $storage = Firebase::storage();
+        $bucket = $storage->getBucket();
+        $path = Storage::path('depot/' . $fileName);
+        $result = $bucket->upload(fopen($path, 'r'), [
+            'resumable' => true,
+            'name' => $fileName,
+            'predefinedAcl' => 'publicRead',
+        ]);
+        $imageUrl = 'https://storage.googleapis.com/' . $result->info()['bucket'] . '/' . $fileName;
+
+        // delete
+        Storage::delete('depot/' . $fileName);
 
         User::create([
             'phone_number' => $request->phone_number,
@@ -70,6 +86,7 @@ class AuthController extends Controller
         Depot::create([
             'phone_number' => $request->phone_number,
             'address' => $request->address,
+            'image' => $imageUrl,
             'location' => $request->location,
             'is_open' => false
         ]);
