@@ -36,4 +36,19 @@ class Depot extends Model
 
         return null;
     }
+
+    public function getRatingAttribute()
+    {
+        $rating = 0;
+        $transactions = Transaction::where('depot_phone_number', $this->phone_number)->get();
+        foreach ($transactions as $transaction) {
+            if ($transaction->rating > 0) {
+                $rating += $transaction->rating;
+            }
+        }
+
+        $rating = $rating == 0 ? $rating : $rating / $transactions->count();
+
+        return $rating;
+    }
 }

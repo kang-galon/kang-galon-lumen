@@ -23,16 +23,18 @@ class DepotController extends Controller
         $data = [];
         foreach ($depots as $depot) {
             $locationArray = explode(',', $depot->location);
-            $latitude = $locationArray[0];
-            $longitude = $locationArray[1];
+            $latitude = (float)$locationArray[0];
+            $longitude = (float)$locationArray[1];
             $distance = Util::distance($myLat, $myLong, $latitude, $longitude);
 
             // if depot distance below 1 km
             if ($distance < 1) {
                 array_push($data, [
                     'phone_number' => $depot->phone_number,
-                    'location' => $depot->location,
+                    'latitude' => $latitude,
+                    'longitude' => $longitude,
                     'address' => $depot->address,
+                    'rating' => $depot->rating,
                     'price' => $depot->price,
                     'price_description' => 'Rp. ' . number_format($depot->price),
                     'is_open' => $depot->is_open,
