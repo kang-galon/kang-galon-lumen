@@ -20,7 +20,7 @@ class Controller extends BaseController
         return null;
     }
 
-    protected function response(?array $data, string $message = 'Success', int $statusCode = 200)
+    protected function response(mixed $data, string $message = 'Success', int $statusCode = 200)
     {
         return response()->json([
             'success' => true,

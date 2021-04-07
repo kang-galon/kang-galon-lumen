@@ -20,6 +20,9 @@
 // Auth Client
 $router->group(['middleware' => 'auth', 'namespace' => 'Client', 'prefix' => 'client'], function () use ($router) {
     $router->get('/', ['uses' => 'ClientController@getProfile']);
+    $router->get('/transaction', ['uses' => 'TransactionController@getTransaction']);
+    $router->get('/transaction/{id}', ['uses' => 'TransactionController@getDetailTransaction']);
+    $router->post('/transaction', ['uses' => 'TransactionController@addTransaction']);
     $router->patch('/', ['uses' => 'ClientController@updateProfile']);
 });
 

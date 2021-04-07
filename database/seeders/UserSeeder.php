@@ -27,8 +27,44 @@ class UserSeeder extends Seeder
 
         // Depot
         DB::table('users')->insert([
-            'phone_number' => '+6289696454545',
-            'name' => 'Depot',
+            'phone_number' => '+6289696111111',
+            'name' => 'Depot Satu',
+            'uid' => Str::random(28),
+            'status' => 1,
+            'created_at' => Carbon::now(),
+        ]);
+
+        // Depot
+        DB::table('users')->insert([
+            'phone_number' => '+6289696222222',
+            'name' => 'Depot Dua',
+            'uid' => Str::random(28),
+            'status' => 1,
+            'created_at' => Carbon::now(),
+        ]);
+
+        // Depot
+        DB::table('users')->insert([
+            'phone_number' => '+6289696333333',
+            'name' => 'Depot Tiga',
+            'uid' => Str::random(28),
+            'status' => 1,
+            'created_at' => Carbon::now(),
+        ]);
+
+        // Depot
+        DB::table('users')->insert([
+            'phone_number' => '+6289696444444',
+            'name' => 'Depot Empat',
+            'uid' => Str::random(28),
+            'status' => 1,
+            'created_at' => Carbon::now(),
+        ]);
+
+        // Depot
+        DB::table('users')->insert([
+            'phone_number' => '+6289696555555',
+            'name' => 'Depot Lima',
             'uid' => Str::random(28),
             'status' => 1,
             'created_at' => Carbon::now(),
