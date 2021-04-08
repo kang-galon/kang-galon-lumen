@@ -31,6 +31,7 @@ class DepotController extends Controller
             if ($distance < 1) {
                 array_push($data, [
                     'phone_number' => $depot->phone_number,
+                    'name' => $depot->user->name,
                     'latitude' => $latitude,
                     'longitude' => $longitude,
                     'address' => $depot->address,

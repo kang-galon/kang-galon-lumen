@@ -4,7 +4,6 @@ namespace App\Models;
 
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\File;
 
 class Depot extends Model
 {
@@ -26,18 +25,6 @@ class Depot extends Model
         'is_open'
     ];
 
-    public function getImageAttribute()
-    {
-        $filePath = 'app/depot/' . $this->phone_number . '.*';
-        $glob = File::glob(storage_path($filePath));
-
-        if (count($glob) > 0) {
-            return url('img/depot/' . $this->phone_number);
-        }
-
-        return null;
-    }
-
     public function getRatingAttribute()
     {
         $rating = 0;
@@ -48,8 +35,15 @@ class Depot extends Model
             }
         }
 
+        // 10/10 rating
         $rating = $rating == 0 ? $rating : $rating / $transactions->count();
 
-        return $rating;
+        // 5/5 rating
+        return $rating / 2;
+    }
+
+    public function user()
+    {
+        return $this->hasOne(User::class, 'phone_number', 'phone_number');
     }
 }
