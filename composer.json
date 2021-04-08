@@ -1,7 +1,11 @@
 {
     "name": "laravel/lumen",
     "description": "The Laravel Lumen Framework.",
-    "keywords": ["framework", "laravel", "lumen"],
+    "keywords": [
+        "framework",
+        "laravel",
+        "lumen"
+    ],
     "license": "MIT",
     "type": "project",
     "require": {
@@ -13,7 +17,6 @@
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
-        "league/flysystem": "1.1",
         "mockery/mockery": "^1.3.1",
         "phpunit/phpunit": "^9.3"
     },
