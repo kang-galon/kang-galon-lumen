@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Transaction;
+namespace App\Http\Resources\Depot\Transaction;
 
 use App\Helper\Util;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -20,18 +20,11 @@ class DetailCollection extends JsonResource
             'status_description' => Util::transactionStatus($this->status),
             'gallon' => $this->gallon,
             'rating' => $this->rating,
-            'created_at' => $this->created_at,
-            'depot' => [
-                'phone_number' => $this->depot->phone_number,
-                'image' => $this->depot->image,
-                'location' => $this->depot->location,
-                'address' => $this->depot->address,
-                'rating' => $this->depot->rating,
-                'price' => $this->depot->price,
-                'price_description' => $this->depot->price_description,
-                'is_open' => $this->depot->is_open,
-                'is_open_description' => $this->depot->is_open ? 'Buka' : 'Tutup',
-                'created_at' => $this->depot->created_at,
+            'created_at' => $this->created_at ? $this->created_at->format('Y-m-d H:i:s') : null,
+            'client' => [
+                'phone_number' => $this->client->phone_number,
+                'name' => $this->client->name,
+                'created_at' => $this->created_at ? $this->created_at->format('Y-m-d H:i:s') : null,
             ],
         ];
     }

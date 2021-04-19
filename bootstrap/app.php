@@ -80,6 +80,8 @@ $app->middleware([
 
 $app->routeMiddleware([
     'auth' => App\Http\Middleware\Authenticate::class,
+    'client' => App\Http\Middleware\ClientMiddleware::class,
+    'depot' => App\Http\Middleware\DepotMiddleware::class,
 ]);
 
 /*

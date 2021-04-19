@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Transaction\AllCollection;
-use App\Http\Resources\Transaction\DetailCollection;
+use App\Http\Resources\Client\Transaction\AllCollection;
+use App\Http\Resources\Client\Transaction\DetailCollection;
 use App\Models\Depot;
 use App\Models\Transaction;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

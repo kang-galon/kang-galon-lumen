@@ -3,8 +3,9 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Support\Facades\Auth;
 
-class ExampleMiddleware
+class DepotMiddleware
 {
     /**
      * Handle an incoming request.
@@ -15,6 +16,15 @@ class ExampleMiddleware
      */
     public function handle($request, Closure $next)
     {
+        $user = Auth::user();
+        if ($user->status != 1) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Access forbidden',
+                'data' => null,
+            ], 403);
+        }
+
         return $next($request);
     }
 }

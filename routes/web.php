@@ -18,7 +18,7 @@
 // });
 
 // Auth Client
-$router->group(['middleware' => 'auth', 'namespace' => 'Client', 'prefix' => 'client'], function () use ($router) {
+$router->group(['middleware' => ['auth', 'client'], 'namespace' => 'Client', 'prefix' => 'client'], function () use ($router) {
     $router->get('/', ['uses' => 'ClientController@getProfile']);
     $router->patch('/', ['uses' => 'ClientController@updateProfile']);
 
@@ -36,8 +36,15 @@ $router->group(['middleware' => 'auth', 'namespace' => 'Client', 'prefix' => 'cl
 });
 
 // Auth Depot
-$router->group(['middleware' => 'auth', 'namespace' => 'Depot', 'prefix' => 'depot'], function () use ($router) {
+$router->group(['middleware' => ['auth', 'depot'], 'namespace' => 'Depot', 'prefix' => 'depot'], function () use ($router) {
     $router->get('/', ['uses' => 'DepotController@getProfile']);
+
+    // Transaction
+    $router->group(['prefix' => 'transaction'], function () use ($router) {
+        $router->get('/', ['uses' => 'TransactionController@getTransaction']);
+        $router->get('/{id}', ['uses' => 'TransactionController@getDetailTransaction']);
+        $router->patch('/{id}', ['uses' => 'TransactionController@updateStatusTransaction']);
+    });
 });
 
 // No Auth - Client
