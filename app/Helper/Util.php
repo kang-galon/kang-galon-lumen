@@ -19,4 +19,25 @@ class Util
             return $km;
         }
     }
+
+    /**
+     * 1 Menunggu persetujuan, 2 Mengambil galon, 3 Mengantar galon, 4 Selesai, 5 Transaksi dibatalkan
+     */
+    static function transactionStatus(int $status): string
+    {
+        $statusDescription = '';
+        if ($status == 1) {
+            $statusDescription = 'Menunggu persetujuan';
+        } else if ($status == 2) {
+            $statusDescription = 'Mengambil galon';
+        } else if ($status == 3) {
+            $statusDescription = 'Mengantar galon';
+        } else if ($status == 4) {
+            $statusDescription = 'Transaksi selesai';
+        } else if ($status == 5) {
+            $statusDescription = 'Transaksi dibatalkan';
+        }
+
+        return $statusDescription;
+    }
 }

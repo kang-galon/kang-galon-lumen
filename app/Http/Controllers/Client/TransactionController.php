@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Transaction\AllCollection;
+use App\Http\Resources\Transaction\DetailCollection;
 use App\Models\Depot;
 use App\Models\Transaction;
 use Carbon\Carbon;
@@ -33,33 +35,16 @@ class TransactionController extends Controller
             'gallon' => $request->gallon,
         ]);
 
-        $transactionArray = json_decode($transaction, true);
-        $transactionArray['total_price_description'] = 'Rp. ' . number_format($transaction->total_price);
-        return $this->response($transactionArray, 'Success create transaction', 201);
+        $transaction = Transaction::find($transaction->id);
+        return $this->response(new AllCollection($transaction), 'Success create transaction', 201);
     }
 
     public function getTransaction()
     {
         $client = Auth::user();
         $transactions = Transaction::where('client_phone_number', $client->phone_number)->get();
-        foreach ($transactions as $transaction) {
-            // 1 Menunggu persetujuan, 2 Mengambil galon, 3 Mengantar galon, 4 Selesai, 5 Transaksi dibatalkan
-            if ($transaction['status'] == 1) {
-                $transaction['status_description'] = 'Menunggu persetujuan';
-            } else if ($transaction['status'] == 2) {
-                $transaction['status_description'] = 'Mengambil galon';
-            } else if ($transaction['status'] == 3) {
-                $transaction['status_description'] = 'Mengantar galon';
-            } else if ($transaction['status'] == 4) {
-                $transaction['status_description'] = 'Transaksi selesai';
-            } else if ($transaction['status'] == 5) {
-                $transaction['status_description'] = 'Transaksi dibatalkan';
-            }
 
-            $transaction['total_price_description'] = 'Rp. ' . number_format($transaction->total_price);
-        }
-
-        return $this->response($transactions, 'Success get transaction');
+        return $this->response(AllCollection::collection($transactions), 'Success get transaction');
     }
 
     public function getDetailTransaction($id)
@@ -73,7 +58,6 @@ class TransactionController extends Controller
             return $this->response(null, 'Transaction not found', 404);
         }
 
-        $transaction['total_price_description'] = 'Rp. ' . number_format($transaction->total_price);
-        return $this->response($transaction, 'Success get detail transaction');
+        return $this->response(new DetailCollection($transaction), 'Success get detail transaction');
     }
 }

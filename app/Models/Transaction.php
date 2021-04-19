@@ -23,4 +23,9 @@ class Transaction extends Model
         'gallon',
         'rating'
     ];
+
+    public function depot()
+    {
+        return $this->hasOne(Depot::class, 'phone_number', 'depot_phone_number');
+    }
 }

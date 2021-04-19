@@ -46,4 +46,9 @@ class Depot extends Model
     {
         return $this->hasOne(User::class, 'phone_number', 'phone_number');
     }
+
+    public function getPriceDescriptionAttribute()
+    {
+        return 'Rp. ' . number_format($this->price);
+    }
 }
