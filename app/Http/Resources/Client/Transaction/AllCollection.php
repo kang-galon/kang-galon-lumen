@@ -11,6 +11,7 @@ class AllCollection extends JsonResource
     {
         return [
             'id' => $this->id,
+            'depot_name' => $this->depot->user->name,
             'depot_phone_number' => $this->depot_phone_number,
             'client_phone_number' => $this->client_phone_number,
             'client_location' => $this->client_location,

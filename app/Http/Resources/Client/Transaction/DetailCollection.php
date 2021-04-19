@@ -12,6 +12,7 @@ class DetailCollection extends JsonResource
         return [
             'id' => $this->id,
             'depot_phone_number' => $this->depot_phone_number,
+            'depot_name' => $this->depot->user->name,
             'client_phone_number' => $this->client_phone_number,
             'client_location' => $this->client_location,
             'total_price' => $this->total_price,
@@ -23,7 +24,6 @@ class DetailCollection extends JsonResource
             'created_at' => $this->created_at ? $this->created_at->format('Y-m-d H:i:s') : null,
             'depot' => [
                 'phone_number' => $this->depot->phone_number,
-                'name' => $this->depot->name,
                 'image' => $this->depot->image,
                 'location' => $this->depot->location,
                 'address' => $this->depot->address,
