@@ -43,7 +43,7 @@ class TransactionController extends Controller
         $client = Auth::user();
         $transactions = Transaction::where('client_phone_number', $client->phone_number)->get();
         foreach ($transactions as $transaction) {
-            // 1 Menunggu persetujuan, 2 Mengambil galon, 3 Mengantar galon, 4 Selesai
+            // 1 Menunggu persetujuan, 2 Mengambil galon, 3 Mengantar galon, 4 Selesai, 5 Transaksi dibatalkan
             if ($transaction['status'] == 1) {
                 $transaction['status_description'] = 'Menunggu persetujuan';
             } else if ($transaction['status'] == 2) {
@@ -52,6 +52,8 @@ class TransactionController extends Controller
                 $transaction['status_description'] = 'Mengantar galon';
             } else if ($transaction['status'] == 4) {
                 $transaction['status_description'] = 'Transaksi selesai';
+            } else if ($transaction['status'] == 5) {
+                $transaction['status_description'] = 'Transaksi dibatalkan';
             }
 
             $transaction['total_price_description'] = 'Rp. ' . number_format($transaction->total_price);

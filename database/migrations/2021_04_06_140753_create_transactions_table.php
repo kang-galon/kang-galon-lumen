@@ -18,7 +18,7 @@ class CreateTransactionsTable extends Migration
             $table->string('client_phone_number', 15);
             $table->string('depot_phone_number', 15);
             $table->string('client_location');
-            $table->smallInteger('status')->default(1)->comment('1 Menunggu persetujuan, 2 Mengambil galon, 3 Mengantar galon, 4 Selesai');
+            $table->smallInteger('status')->default(1)->comment('1 Menunggu persetujuan, 2 Mengambil galon, 3 Mengantar galon, 4 Selesai, 5 Dibatalkan');
             $table->integer('total_price');
             $table->integer('gallon');
             $table->integer('rating')->default(0);

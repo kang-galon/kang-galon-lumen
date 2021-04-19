@@ -56,6 +56,10 @@ class AuthController extends Controller
             'status' => 2,
         ]);
 
-        return $this->response(null, 'Registration client success', 201);
+        return $this->response([
+            'phone_number' => $request->phone_number,
+            'name' => $request->name,
+            'uid' => $request->uid
+        ], 'Registration client success', 201);
     }
 }
