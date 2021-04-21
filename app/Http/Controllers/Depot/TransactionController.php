@@ -8,7 +8,6 @@ use App\Http\Resources\Depot\Transaction\DetailCollection;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rule;
 
 class TransactionController extends Controller
 {
@@ -34,38 +33,93 @@ class TransactionController extends Controller
         return $this->response(new DetailCollection($transaction), 'Success get detail transaction');
     }
 
-    public function updateStatusTransaction($id, Request $request)
+    // 1 Menunggu persetujuan, 2 Mengambil galon, 3 Mengantar galon, 4 Selesai, 5 Transaksi dibatalkan
+    public function takeGallonStatus($id, Request $request)
     {
-        // 1 Menunggu persetujuan, 2 Mengambil galon, 3 Mengantar galon, 4 Selesai, 5 Transaksi dibatalkan
         $this->invalidValidResponse($request, [
-            'status' => ['required', Rule::in([2, 3, 4, 5])],
+            'gallon' => 'required|numeric',
         ]);
 
         $depot = Auth::user();
         $transaction = Transaction::where('depot_phone_number', $depot->phone_number)
-            ->where('id', $id);
-
-        if ($request->status == 2) {
-            $transaction = $transaction->where('status', 1);
-        } else if ($request->status == 3) {
-            $transaction = $transaction->where('status', 2);
-        } else if ($request->status == 4) {
-            $transaction = $transaction->where('status', 3);
-        } else if ($request->status == 5) {
-            $transaction = $transaction->where('status', 1);
-        }
-
-        $transaction = $transaction->first();
+            ->where('id', $id)
+            ->where('status', 1)
+            ->first();
 
         if ($transaction == null) {
-            if ($transaction == null) {
-                return $this->response(null, 'Transaction not found', 404);
-            }
+            return $this->response(null, 'Transaction not found', 404);
         }
 
-        $transaction->status = (int)$request->status;
+        // jika gallon yang diambil lebih besar dari yang direquest
+        if ($request->gallon > $transaction->gallon) {
+            return $this->response(null, 'Gallon must be less or same', 400);
+        }
+
+        // update price and gallon
+        $transaction->total_price = $transaction->depot->price * $request->gallon;
+        $transaction->gallon = $request->gallon;
+
+        // update status
+        $transaction->status = 2;
         $transaction->save();
 
-        return $this->response(new DetailCollection($transaction), 'Success update status transaction');
+        return $this->response(new DetailCollection($transaction), 'Success update to take status transaction');
+    }
+
+    // 1 Menunggu persetujuan, 2 Mengambil galon, 3 Mengantar galon, 4 Selesai, 5 Transaksi dibatalkan
+    public function sendGallonStatus($id)
+    {
+        $depot = Auth::user();
+        $transaction = Transaction::where('depot_phone_number', $depot->phone_number)
+            ->where('id', $id)
+            ->where('status', 2)
+            ->first();
+
+        if ($transaction == null) {
+            return $this->response(null, 'Transaction not found', 404);
+        }
+
+        $transaction->status = 3;
+        $transaction->save();
+
+        return $this->response(new DetailCollection($transaction), 'Success update to send status transaction');
+    }
+
+    // 1 Menunggu persetujuan, 2 Mengambil galon, 3 Mengantar galon, 4 Selesai, 5 Transaksi dibatalkan
+    public function completeStatus($id)
+    {
+        $depot = Auth::user();
+        $transaction = Transaction::where('depot_phone_number', $depot->phone_number)
+            ->where('id', $id)
+            ->where('status', 3)
+            ->first();
+
+        if ($transaction == null) {
+            return $this->response(null, 'Transaction not found', 404);
+        }
+
+        $transaction->status = 4;
+        $transaction->save();
+
+        return $this->response(new DetailCollection($transaction), 'Success update to complete status transaction');
+    }
+
+    // 1 Menunggu persetujuan, 2 Mengambil galon, 3 Mengantar galon, 4 Selesai, 5 Transaksi dibatalkan
+    public function denyStatus($id)
+    {
+        $depot = Auth::user();
+        $transaction = Transaction::where('depot_phone_number', $depot->phone_number)
+            ->where('id', $id)
+            ->where('status', 1)
+            ->first();
+
+        if ($transaction == null) {
+            return $this->response(null, 'Transaction not found', 404);
+        }
+
+        $transaction->status = 5;
+        $transaction->save();
+
+        return $this->response(new DetailCollection($transaction), 'Success update to deny status transaction');
     }
 }

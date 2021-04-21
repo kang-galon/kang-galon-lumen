@@ -18,7 +18,7 @@ class DepotController extends Controller
 
         $myLat = $request->latitude;
         $myLong = $request->longitude;
-        $depots = Depot::all();
+        $depots = Depot::where('is_open', true)->get();
 
         $data = [];
         foreach ($depots as $depot) {

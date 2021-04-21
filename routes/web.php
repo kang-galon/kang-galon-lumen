@@ -18,7 +18,7 @@
 // });
 
 // Auth Client
-$router->group(['middleware' => ['auth', 'client'], 'namespace' => 'Client', 'prefix' => 'client'], function () use ($router) {
+$router->group(['middleware' => ['auth'], 'namespace' => 'Client', 'prefix' => 'client'], function () use ($router) {
     $router->get('/', ['uses' => 'ClientController@getProfile']);
     $router->patch('/', ['uses' => 'ClientController@updateProfile']);
 
@@ -36,14 +36,19 @@ $router->group(['middleware' => ['auth', 'client'], 'namespace' => 'Client', 'pr
 });
 
 // Auth Depot
-$router->group(['middleware' => ['auth', 'depot'], 'namespace' => 'Depot', 'prefix' => 'depot'], function () use ($router) {
+$router->group(['middleware' => ['auth'], 'namespace' => 'Depot', 'prefix' => 'depot'], function () use ($router) {
     $router->get('/', ['uses' => 'DepotController@getProfile']);
+    $router->patch('/open', ['uses' => 'DepotController@openDepot']);
+    $router->patch('/close', ['uses' => 'DepotController@closeDepot']);
 
     // Transaction
     $router->group(['prefix' => 'transaction'], function () use ($router) {
         $router->get('/', ['uses' => 'TransactionController@getTransaction']);
         $router->get('/{id}', ['uses' => 'TransactionController@getDetailTransaction']);
-        $router->patch('/{id}', ['uses' => 'TransactionController@updateStatusTransaction']);
+        $router->patch('/{id}/take-status', ['uses' => 'TransactionController@takeGallonStatus']);
+        $router->patch('/{id}/send-status', ['uses' => 'TransactionController@sendGallonStatus']);
+        $router->patch('/{id}/complete-status', ['uses' => 'TransactionController@completeStatus']);
+        $router->patch('/{id}/deny-status', ['uses' => 'TransactionController@denyStatus']);
     });
 });
 
