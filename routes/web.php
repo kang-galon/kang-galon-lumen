@@ -18,6 +18,7 @@
 // });
 
 // Auth Client
+// TODO Client middleware
 $router->group(['middleware' => ['auth'], 'namespace' => 'Client', 'prefix' => 'client'], function () use ($router) {
     $router->get('/', ['uses' => 'ClientController@getProfile']);
     $router->patch('/', ['uses' => 'ClientController@updateProfile']);
@@ -36,6 +37,7 @@ $router->group(['middleware' => ['auth'], 'namespace' => 'Client', 'prefix' => '
 });
 
 // Auth Depot
+// TODO Depot middleware
 $router->group(['middleware' => ['auth'], 'namespace' => 'Depot', 'prefix' => 'depot'], function () use ($router) {
     $router->get('/', ['uses' => 'DepotController@getProfile']);
     $router->patch('/open', ['uses' => 'DepotController@openDepot']);
