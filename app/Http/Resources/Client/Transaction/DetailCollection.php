@@ -9,6 +9,10 @@ class DetailCollection extends JsonResource
 {
     public function toArray($request)
     {
+        $locationArray = explode(',', $this->depot->location);
+        $latitude = (float)$locationArray[0];
+        $longitude = (float)$locationArray[1];
+
         return [
             'id' => $this->id,
             'depot_phone_number' => $this->depot_phone_number,
@@ -25,7 +29,8 @@ class DetailCollection extends JsonResource
             'depot' => [
                 'phone_number' => $this->depot->phone_number,
                 'image' => $this->depot->image,
-                'location' => $this->depot->location,
+                'latitude' => $latitude,
+                'longitude' => $longitude,
                 'address' => $this->depot->address,
                 'rating' => $this->depot->rating,
                 'price' => $this->depot->price,
