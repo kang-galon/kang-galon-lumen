@@ -26,6 +26,7 @@ $router->group(['middleware' => ['auth'], 'namespace' => 'Client', 'prefix' => '
     // Transaction
     $router->group(['prefix' => 'transaction'], function () use ($router) {
         $router->get('/', ['uses' => 'TransactionController@getTransaction']);
+        $router->get('/current', ['uses' => 'TransactionController@getCurrentTransaction']);
         $router->get('/{id}', ['uses' => 'TransactionController@getDetailTransaction']);
         $router->post('/', ['uses' => 'TransactionController@addTransaction']);
     });

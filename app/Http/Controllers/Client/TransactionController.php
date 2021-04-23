@@ -26,6 +26,15 @@ class TransactionController extends Controller
         }
 
         $client = Auth::user();
+
+        // check if transaction with status 1, 2, 3 doesn't exist
+        $transactions = Transaction::where('client_phone_number', $client->phone_number)
+            ->whereIn('status', [1, 2, 3])
+            ->get();
+        if ($transactions->count() > 0) {
+            return $this->response(null, 'Failed create transaction', 400);
+        }
+
         $transaction = Transaction::create([
             'client_phone_number' => $client->phone_number,
             'depot_phone_number' => $request->depot_phone_number,
@@ -52,6 +61,21 @@ class TransactionController extends Controller
         $transaction = Transaction::where('client_phone_number', $client->phone_number)
             ->where('id', $id)
             ->first();
+
+        if ($transaction == null) {
+            return $this->response(null, 'Transaction not found', 404);
+        }
+
+        return $this->response(new DetailCollection($transaction), 'Success get detail transaction');
+    }
+
+    public function getCurrentTransaction()
+    {
+        $client = Auth::user();
+        $transaction = Transaction::where('client_phone_number', $client->phone_number)
+            ->whereIn('status', [1, 2, 3])
+            ->first();
+
 
         if ($transaction == null) {
             return $this->response(null, 'Transaction not found', 404);
