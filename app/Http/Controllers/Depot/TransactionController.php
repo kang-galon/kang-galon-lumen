@@ -33,7 +33,7 @@ class TransactionController extends Controller
         return $this->response(new DetailCollection($transaction), 'Success get detail transaction');
     }
 
-    // 1 Menunggu persetujuan, 2 Mengambil galon, 3 Mengantar galon, 4 Selesai, 5 Transaksi dibatalkan
+    // 1 Menunggu persetujuan, 2 Mengambil galon, 3 Mengantar galon, 4 Menunggu rating, 5 Selesai, 6 Transaksi dibatalkan
     public function takeGallonStatus($id, Request $request)
     {
         $this->invalidValidResponse($request, [

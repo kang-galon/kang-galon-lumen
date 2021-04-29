@@ -29,6 +29,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'phone_number',
         'name',
         'uid',
+        'device_id',
         'status'
     ];
 

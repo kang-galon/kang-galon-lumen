@@ -35,6 +35,7 @@ class AuthController extends Controller
             'address' => 'required',
             'image' => 'required|image|mimes:jpg,jpeg,png',
             'uid' => 'required',
+            'device_id' => 'required',
             'token' => 'required'
         ]);
 
@@ -73,6 +74,7 @@ class AuthController extends Controller
             'phone_number' => $request->phone_number,
             'name' => $request->name,
             'uid' => $request->uid,
+            'device_id' => $request->device_id,
             'status' => 2,
         ]);
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Client;
 
+use App\Helper\FirebaseHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Client\Transaction\AllCollection;
 use App\Http\Resources\Client\Transaction\DetailCollection;
@@ -9,6 +10,8 @@ use App\Models\Depot;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Kreait\Firebase\Messaging\CloudMessage;
+use Kreait\Laravel\Firebase\Facades\Firebase;
 
 class TransactionController extends Controller
 {
@@ -27,9 +30,9 @@ class TransactionController extends Controller
 
         $client = Auth::user();
 
-        // check if transaction with status 1, 2, 3 doesn't exist
+        // check if transaction with status 1, 2, 3, 4  doesn't exist
         $transactions = Transaction::where('client_phone_number', $client->phone_number)
-            ->whereIn('status', [1, 2, 3])
+            ->whereIn('status', [1, 2, 3, 4])
             ->get();
         if ($transactions->count() > 0) {
             return $this->response(null, 'Failed create transaction', 400);
@@ -42,6 +45,9 @@ class TransactionController extends Controller
             'total_price' => $depot->price * $request->gallon,
             'gallon' => $request->gallon,
         ]);
+
+        // send notification
+        FirebaseHelper::sendNotification($client->device_id, 'Berhasil checkout', 'Silahkan menunggu galon anda dijemput');
 
         $transaction = Transaction::find($transaction->id);
         return $this->response(new AllCollection($transaction), 'Success create transaction', 201);
@@ -73,7 +79,7 @@ class TransactionController extends Controller
     {
         $client = Auth::user();
         $transaction = Transaction::where('client_phone_number', $client->phone_number)
-            ->whereIn('status', [1, 2, 3])
+            ->whereIn('status', [1, 2, 3, 4])
             ->first();
 
 
@@ -82,5 +88,18 @@ class TransactionController extends Controller
         }
 
         return $this->response(new DetailCollection($transaction), 'Success get detail transaction');
+    }
+
+    public function testNotification()
+    {
+        $deviceId = 'dL1jVOshRVyT4HqilgFIP6:APA91bHZnjXyqrJIQ_EOW9uu0lxt1zoXDuTlaWfbOHfY7cZ6_zDfTjX59qGdUnZP0iYTQAYfmgkXpUssETjKoEFCch9znqI_gNrHN1jlMW1FyAe6AvmIJTngjrbv4rqU6SOk8FQGL8DL';
+        $message = CloudMessage::withTarget('token', $deviceId)
+            ->withNotification([
+                'title' => 'test title heyaaa',
+                'data' => 'test data heyaaa'
+            ]);
+        // ->withData(['title' => 'test data heyaaa']);
+
+        Firebase::messaging()->send($message);
     }
 }

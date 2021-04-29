@@ -31,6 +31,7 @@ class AuthController extends Controller
             'phone_number' => 'required|numeric|starts_with:+628|unique:users,phone_number',
             'name' => 'required',
             'uid' => 'required',
+            'device_id' => 'required',
             'token' => 'required'
         ]);
 
@@ -53,6 +54,7 @@ class AuthController extends Controller
             'phone_number' => $request->phone_number,
             'name' => $request->name,
             'uid' => $request->uid,
+            'device_id' => $request->device_id,
             'status' => 2,
         ]);
 

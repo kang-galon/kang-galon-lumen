@@ -21,7 +21,7 @@ class Util
     }
 
     /**
-     * 1 Menunggu persetujuan, 2 Mengambil galon, 3 Mengantar galon, 4 Selesai, 5 Transaksi dibatalkan
+     * 1 Menunggu persetujuan, 2 Mengambil galon, 3 Mengantar galon, 4 Menunggu rating, 5 Selesai, 6 Transaksi dibatalkan
      */
     static function transactionStatus(int $status): string
     {
@@ -33,8 +33,10 @@ class Util
         } else if ($status == 3) {
             $statusDescription = 'Mengantar galon';
         } else if ($status == 4) {
-            $statusDescription = 'Transaksi selesai';
+            $statusDescription = 'Menunggu rating';
         } else if ($status == 5) {
+            $statusDescription = 'Transaksi selesai';
+        } else if ($status == 6) {
             $statusDescription = 'Transaksi dibatalkan';
         }
 

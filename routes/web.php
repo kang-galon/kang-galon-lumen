@@ -35,6 +35,12 @@ $router->group(['middleware' => ['auth'], 'namespace' => 'Client', 'prefix' => '
     $router->group(['prefix' => 'depot'], function () use ($router) {
         $router->get('/', ['uses' => 'DepotController@getDepot']);
     });
+
+    // Chats
+    $router->group(['prefix' => 'chats'], function () use ($router) {
+        $router->get('/', ['uses' => 'ChatsController@getMessage']);
+        $router->post('/send', ['uses' => 'ChatsController@sendMessage']);
+    });
 });
 
 // Auth Depot
@@ -59,6 +65,7 @@ $router->group(['middleware' => ['auth'], 'namespace' => 'Depot', 'prefix' => 'd
 $router->group(['namespace' => 'Client', 'prefix' => 'client'], function () use ($router) {
     $router->post('/check-user', ['uses' => 'AuthController@checkUser']);
     $router->post('/register', ['uses' => 'AuthController@register']);
+    $router->get('/notification', ['uses' => 'TransactionController@testNotification']);
 });
 
 // No Auth - Depot
