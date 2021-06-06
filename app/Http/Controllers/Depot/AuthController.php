@@ -33,6 +33,7 @@ class AuthController extends Controller
             'name' => 'required',
             'location' => 'required',
             'address' => 'required',
+            'price' => 'required|numeric',
             'image' => 'required|image|mimes:jpg,jpeg,png',
             'uid' => 'required',
             'device_id' => 'required',
@@ -81,6 +82,7 @@ class AuthController extends Controller
         Depot::create([
             'phone_number' => $request->phone_number,
             'address' => $request->address,
+            'price' => $request->price,
             'image' => $imageUrl,
             'location' => $request->location,
             'is_open' => false
