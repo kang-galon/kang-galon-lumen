@@ -27,32 +27,14 @@ class DepotController extends Controller
             'location' => 'required',
             'address' => 'required',
             'price' => 'required|numeric',
-            'image' => 'required|image|mimes:jpg,jpeg,png',
         ]);
 
         $phoneNumber = Auth::user()->phone_number;
         $depot = Depot::where('phone_number', $phoneNumber)->first();
         $user = User::where('phone_number', $phoneNumber)->first();
 
-        // save image to storage
-        $file = $request->file('image');
-        $path = $file->path();
-        $ext = $file->extension();
-        $fileName = $phoneNumber . '.' . $ext;
-
-        // upload to firebase
-        $storage = Firebase::storage();
-        $bucket = $storage->getBucket();
-        $result = $bucket->upload(fopen($path, 'r'), [
-            'resumable' => true,
-            'name' => $fileName,
-            'predefinedAcl' => 'publicRead',
-        ]);
-        $imageUrl = 'https://storage.googleapis.com/' . $result->info()['bucket'] . '/' . $fileName;
-
         $user->name = $request->name;
         $depot->location = $request->location;
-        $depot->image = $imageUrl;
         $depot->price = $request->price;
         $depot->address = $request->address;
 
