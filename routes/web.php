@@ -47,6 +47,7 @@ $router->group(['middleware' => ['auth'], 'namespace' => 'Client', 'prefix' => '
 // TODO Depot middleware
 $router->group(['middleware' => ['auth'], 'namespace' => 'Depot', 'prefix' => 'depot'], function () use ($router) {
     $router->get('/', ['uses' => 'DepotController@getProfile']);
+    $router->post('/', ['uses' => 'DepotController@updateProfile']);
     $router->patch('/open', ['uses' => 'DepotController@openDepot']);
     $router->patch('/close', ['uses' => 'DepotController@closeDepot']);
 

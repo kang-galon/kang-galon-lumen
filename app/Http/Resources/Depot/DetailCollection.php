@@ -13,16 +13,19 @@ class DetailCollection extends JsonResource
         $longitude = (float)$locationArray[1];
 
         return [
-            'phone_number' => $this->phone_number,
             'name' => $this->user->name,
-            'image' => $this->image,
-            'latitude' => $this->latitude,
-            'longitude' => $this->longitude,
+            'uid' => $this->user->uid,
+            'phone_number' => $this->phone_number,
+            'latitude' => $latitude,
+            'longitude' => $longitude,
             'address' => $this->address,
+            'image' => $this->image,
             'price' => $this->price,
             'price_description' => 'Rp. ' . number_format($this->price),
             'is_open' => $this->is_open,
             'is_open_description' => $this->is_open ? 'Buka' : 'Tutup',
+            'status' => $this->user->status,
+            'status_description' => 'Depot'
         ];
     }
 }

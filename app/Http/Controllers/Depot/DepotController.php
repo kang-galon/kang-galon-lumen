@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Depot;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Depot\DetailCollection;
 use App\Models\Depot;
+use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Kreait\Laravel\Firebase\Facades\Firebase;
 
 class DepotController extends Controller
 {
@@ -13,22 +16,50 @@ class DepotController extends Controller
     {
         $user = Auth::user();
         $depot = $user->depot;
-        $data = [
-            'name' => $user->name,
-            'uid' => $user->uid,
-            'phone_number' => $user->phone_number,
-            'location' => $depot->location,
-            'address' => $depot->address,
-            'image' => $depot->image,
-            'price' => $depot->price,
-            'price_description' => 'Rp. ' . number_format($depot->price),
-            'is_open' => $depot->is_open,
-            'is_open_description' => $depot->is_open ? 'Buka' : 'Tutup',
-            'status' => $user->status,
-            'status_description' => 'Depot'
-        ];
 
-        return $this->response($data);
+        return $this->response(new DetailCollection($depot), 'Success update profile', 201);
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $this->invalidValidResponse($request, [
+            'name' => 'required',
+            'location' => 'required',
+            'address' => 'required',
+            'price' => 'required|numeric',
+            'image' => 'required|image|mimes:jpg,jpeg,png',
+        ]);
+
+        $phoneNumber = Auth::user()->phone_number;
+        $depot = Depot::where('phone_number', $phoneNumber)->first();
+        $user = User::where('phone_number', $phoneNumber)->first();
+
+        // save image to storage
+        $file = $request->file('image');
+        $path = $file->path();
+        $ext = $file->extension();
+        $fileName = $phoneNumber . '.' . $ext;
+
+        // upload to firebase
+        $storage = Firebase::storage();
+        $bucket = $storage->getBucket();
+        $result = $bucket->upload(fopen($path, 'r'), [
+            'resumable' => true,
+            'name' => $fileName,
+            'predefinedAcl' => 'publicRead',
+        ]);
+        $imageUrl = 'https://storage.googleapis.com/' . $result->info()['bucket'] . '/' . $fileName;
+
+        $user->name = $request->name;
+        $depot->location = $request->location;
+        $depot->image = $imageUrl;
+        $depot->price = $request->price;
+        $depot->address = $request->address;
+
+        $user->save();
+        $depot->save();
+
+        return $this->response(new DetailCollection($depot), 'Success update profile', 201);
     }
 
     public function openDepot()
