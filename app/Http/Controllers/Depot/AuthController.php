@@ -85,7 +85,7 @@ class AuthController extends Controller
             'price' => $request->price,
             'image' => $imageUrl,
             'location' => $request->location,
-            'is_open' => false
+            'is_open' => true
         ]);
 
         return $this->response(null, 'Registration depot success', 201);
