@@ -9,12 +9,25 @@ use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * 1 Menunggu persetujuan, 2 Mengambil galon, 3 Mengantar galon, 4 Menunggu rating, 5 Selesai, 6 Transaksi dibatalkan
+ */
 class TransactionController extends Controller
 {
     public function getTransaction()
     {
         $depot = Auth::user();
         $transactions = Transaction::where('depot_phone_number', $depot->phone_number)->get();
+
+        return $this->response(AllCollection::collection($transactions), 'Success get transaction');
+    }
+
+    public function getCurrentTransaction()
+    {
+        $depot = Auth::user();
+        $transactions = Transaction::where('depot_phone_number', $depot->phone_number)
+            ->whereIn('status', [1, 2, 3, 4])
+            ->get();
 
         return $this->response(AllCollection::collection($transactions), 'Success get transaction');
     }

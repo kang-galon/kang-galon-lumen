@@ -54,6 +54,7 @@ $router->group(['middleware' => ['auth'], 'namespace' => 'Depot', 'prefix' => 'd
     // Transaction
     $router->group(['prefix' => 'transaction'], function () use ($router) {
         $router->get('/', ['uses' => 'TransactionController@getTransaction']);
+        $router->get('/current', ['uses' => 'TransactionController@getCurrentTransaction']);
         $router->get('/{id}', ['uses' => 'TransactionController@getDetailTransaction']);
         $router->patch('/{id}/take-status', ['uses' => 'TransactionController@takeGallonStatus']);
         $router->patch('/{id}/send-status', ['uses' => 'TransactionController@sendGallonStatus']);
