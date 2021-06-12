@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Depot;
 
+use App\Helper\FirebaseHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Depot\Transaction\AllCollection;
 use App\Http\Resources\Depot\Transaction\DetailCollection;
 use App\Models\Transaction;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -46,7 +48,6 @@ class TransactionController extends Controller
         return $this->response(new DetailCollection($transaction), 'Success get detail transaction');
     }
 
-    // 1 Menunggu persetujuan, 2 Mengambil galon, 3 Mengantar galon, 4 Menunggu rating, 5 Selesai, 6 Transaksi dibatalkan
     public function takeGallonStatus($id, Request $request)
     {
         $this->invalidValidResponse($request, [
@@ -76,10 +77,14 @@ class TransactionController extends Controller
         $transaction->status = 2;
         $transaction->save();
 
+        // send notification to client
+        $client = User::where('phone_number', $transaction->client_phone_number)
+            ->first();
+        FirebaseHelper::sendNotification($client->device_id, 'Pesanan dikonfirmasi', 'Silahkan menunggu galon akan segera diambil');
+
         return $this->response(new DetailCollection($transaction), 'Success update to take status transaction');
     }
 
-    // 1 Menunggu persetujuan, 2 Mengambil galon, 3 Mengantar galon, 4 Selesai, 5 Transaksi dibatalkan
     public function sendGallonStatus($id)
     {
         $depot = Auth::user();
@@ -95,10 +100,14 @@ class TransactionController extends Controller
         $transaction->status = 3;
         $transaction->save();
 
+        // send notification to client
+        $client = User::where('phone_number', $transaction->client_phone_number)
+            ->first();
+        FirebaseHelper::sendNotification($client->device_id, 'Galon sudah diambil', 'Silahkan tunggu galon akan segera diantar ke tujuan');
+
         return $this->response(new DetailCollection($transaction), 'Success update to send status transaction');
     }
 
-    // 1 Menunggu persetujuan, 2 Mengambil galon, 3 Mengantar galon, 4 Selesai, 5 Transaksi dibatalkan
     public function completeStatus($id)
     {
         $depot = Auth::user();
@@ -114,10 +123,14 @@ class TransactionController extends Controller
         $transaction->status = 4;
         $transaction->save();
 
+        // send notification to client
+        $client = User::where('phone_number', $transaction->client_phone_number)
+            ->first();
+        FirebaseHelper::sendNotification($client->device_id, 'Galon sudah sampai ditujuan', 'Silahkan bayar sesuai harga dan beri rating terbaik mu');
+
         return $this->response(new DetailCollection($transaction), 'Success update to complete status transaction');
     }
 
-    // 1 Menunggu persetujuan, 2 Mengambil galon, 3 Mengantar galon, 4 Selesai, 5 Transaksi dibatalkan
     public function denyStatus($id)
     {
         $depot = Auth::user();
@@ -132,6 +145,11 @@ class TransactionController extends Controller
 
         $transaction->status = 5;
         $transaction->save();
+
+        // send notification to client
+        $client = User::where('phone_number', $transaction->client_phone_number)
+            ->first();
+        FirebaseHelper::sendNotification($client->device_id, 'Pesanan dibatalkan', 'Silahkan pesan galon ditempat lain');
 
         return $this->response(new DetailCollection($transaction), 'Success update to deny status transaction');
     }

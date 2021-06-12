@@ -46,8 +46,11 @@ class TransactionController extends Controller
             'gallon' => $request->gallon,
         ]);
 
-        // send notification
+        // send notification to client
         FirebaseHelper::sendNotification($client->device_id, 'Berhasil checkout', 'Silahkan menunggu galon anda dijemput');
+
+        // send notification to depot
+        FirebaseHelper::sendNotification($depot->user->device_id, 'Ada pesanan', 'Ada pesanan baru sebanyak ' . $request->gallon . ' galon');
 
         $transaction = Transaction::find($transaction->id);
         return $this->response(new AllCollection($transaction), 'Success create transaction', 201);
