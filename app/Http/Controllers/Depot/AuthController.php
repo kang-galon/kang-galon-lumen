@@ -18,7 +18,9 @@ class AuthController extends Controller
             'phone_number' => 'required|numeric|starts_with:+628',
         ]);
 
-        $user = User::where('phone_number', $request->phone_number)->first();
+        $user = User::where('phone_number', $request->phone_number)
+            ->where('status', 1)
+            ->first();
         if ($user == null) {
             return $this->response(null, 'Phone number doesn\'t exist', 404);
         }
