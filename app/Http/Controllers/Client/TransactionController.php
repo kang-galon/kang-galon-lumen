@@ -8,11 +8,14 @@ use App\Http\Resources\Client\Transaction\AllCollection;
 use App\Http\Resources\Client\Transaction\DetailCollection;
 use App\Models\Depot;
 use App\Models\Transaction;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Kreait\Firebase\Messaging\CloudMessage;
 use Kreait\Laravel\Firebase\Facades\Firebase;
 
+/**
+ * 1 Menunggu persetujuan, 2 Mengambil galon, 3 Mengantar galon, 4 Menunggu rating, 5 Selesai, 6 Transaksi dibatalkan
+ */
 class TransactionController extends Controller
 {
     public function addTransaction(Request $request)
@@ -93,16 +96,27 @@ class TransactionController extends Controller
         return $this->response(new DetailCollection($transaction), 'Success get detail transaction');
     }
 
-    public function testNotification()
+    public function denyCurrentTransaction()
     {
-        $deviceId = 'dL1jVOshRVyT4HqilgFIP6:APA91bHZnjXyqrJIQ_EOW9uu0lxt1zoXDuTlaWfbOHfY7cZ6_zDfTjX59qGdUnZP0iYTQAYfmgkXpUssETjKoEFCch9znqI_gNrHN1jlMW1FyAe6AvmIJTngjrbv4rqU6SOk8FQGL8DL';
-        $message = CloudMessage::withTarget('token', $deviceId)
-            ->withNotification([
-                'title' => 'test title heyaaa',
-                'data' => 'test data heyaaa'
-            ]);
-        // ->withData(['title' => 'test data heyaaa']);
+        $client = Auth::user();
+        $transaction = Transaction::where('client_phone_number', $client->phone_number)
+            ->where('status', 1)
+            ->first();
 
-        Firebase::messaging()->send($message);
+        if ($transaction == null) {
+            return $this->response(null, 'Transaction not found', 404);
+        }
+
+        $transaction->status = 6;
+        $transaction->save();
+
+        // send notification to client
+        FirebaseHelper::sendNotification($client->device_id, 'Berhasil dibatalkan', 'Pesanan berhasil dibatalkan');
+
+        // send notification to depot
+        $depot = User::where('phone_number', $transaction->depot_phone_number)->first();
+        FirebaseHelper::sendNotification($depot->device_id, 'Pesanan dibatalkan', 'Ada pesanan yang dibatalkan oleh pembeli');
+
+        return $this->response(new DetailCollection($transaction), 'Success deny transaction');
     }
 }
