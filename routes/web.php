@@ -62,6 +62,12 @@ $router->group(['middleware' => ['auth'], 'namespace' => 'Depot', 'prefix' => 'd
         $router->patch('/{id}/complete-status', ['uses' => 'TransactionController@completeStatus']);
         $router->patch('/{id}/deny-status', ['uses' => 'TransactionController@denyStatus']);
     });
+
+    // Chats
+    $router->group(['prefix' => 'chats'], function () use ($router) {
+        $router->get('/{transactionId}', ['uses' => 'ChatsController@getMessage']);
+        $router->post('/send', ['uses' => 'ChatsController@sendMessage']);
+    });
 });
 
 // No Auth - Client

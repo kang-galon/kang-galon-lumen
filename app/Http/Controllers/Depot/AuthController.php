@@ -78,7 +78,7 @@ class AuthController extends Controller
             'name' => $request->name,
             'uid' => $request->uid,
             'device_id' => $request->device_id,
-            'status' => 2,
+            'status' => 1,
         ]);
 
         Depot::create([

@@ -20,6 +20,7 @@ class DetailCollection extends JsonResource
             'longitude' => $longitude,
             'address' => $this->address,
             'image' => $this->image,
+            'rating' => $this->rating,
             'price' => (int)$this->price,
             'price_description' => 'Rp. ' . number_format($this->price),
             'is_open' => $this->is_open,

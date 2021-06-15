@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Resources\Client\Chats;
+namespace App\Http\Resources\Depot\Chats;
 
 use App\Models\Chats;
 use App\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TransactionCollection extends JsonResource
+class ChatsCollection extends JsonResource
 {
     public function toArray($request)
     {
@@ -40,7 +40,7 @@ class TransactionCollection extends JsonResource
                 'name' => $userClient->name,
                 'created_at' => $userClient->created_at ? $userClient->created_at->format('Y-m-d H:i:s') : null,
             ],
-            'chats' => ChatsCollection::collection($chats),
+            'chats' => MessageCollection::collection($chats),
         ];
     }
 }
