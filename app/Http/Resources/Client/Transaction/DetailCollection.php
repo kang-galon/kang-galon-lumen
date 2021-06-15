@@ -27,6 +27,7 @@ class DetailCollection extends JsonResource
             'rating' => $this->rating,
             'created_at' => $this->created_at ? $this->created_at->format('Y-m-d H:i:s') : null,
             'depot' => [
+                'name' => $this->depot->user->name,
                 'phone_number' => $this->depot->phone_number,
                 'image' => $this->depot->image,
                 'latitude' => $latitude,
