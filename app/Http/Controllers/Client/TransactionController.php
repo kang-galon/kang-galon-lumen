@@ -119,4 +119,33 @@ class TransactionController extends Controller
 
         return $this->response(new DetailCollection($transaction), 'Success deny transaction');
     }
+
+    public function ratingCurrentTransaction(Request $request)
+    {
+        $this->invalidValidResponse($request, [
+            'rating' => 'required|numeric|min:1|max:10',
+        ]);
+
+        $client = Auth::user();
+        $transaction = Transaction::where('client_phone_number', $client->phone_number)
+            ->where('status', 4)
+            ->first();
+
+        if ($transaction == null) {
+            return $this->response(null, 'Transaction not found', 404);
+        }
+
+        $transaction->rating = $request->rating;
+        $transaction->status = 5;
+        $transaction->save();
+
+        // send notification to client
+        FirebaseHelper::sendNotification($client->device_id, 'Berhasil rating', 'Terima kasih rating yang anda berikan');
+
+        // send notification to depot
+        $depot = User::where('phone_number', $transaction->depot_phone_number)->first();
+        FirebaseHelper::sendNotification($depot->device_id, 'Pesanan dirating', 'Pesanan dirating oleh pelanggan');
+
+        return $this->response(new DetailCollection($transaction), 'Success deny transaction');
+    }
 }

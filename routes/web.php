@@ -30,6 +30,7 @@ $router->group(['middleware' => ['auth'], 'namespace' => 'Client', 'prefix' => '
         $router->get('/{id}', ['uses' => 'TransactionController@getDetailTransaction']);
         $router->post('/', ['uses' => 'TransactionController@addTransaction']);
         $router->post('/current/deny', ['uses' => 'TransactionController@denyCurrentTransaction']);
+        $router->post('/current/rating', ['uses' => 'TransactionController@ratingCurrentTransaction']);
     });
 
     // Depot
