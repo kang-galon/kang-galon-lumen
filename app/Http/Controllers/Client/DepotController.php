@@ -27,8 +27,8 @@ class DepotController extends Controller
             $longitude = (float)$locationArray[1];
             $distance = Util::distance($myLat, $myLong, $latitude, $longitude);
 
-            // if depot distance below 5 km
-            if ($distance < 5) {
+            // if depot distance below 3 km
+            if ($distance < 3) {
                 array_push($data, [
                     'phone_number' => $depot->phone_number,
                     'name' => $depot->user->name,
