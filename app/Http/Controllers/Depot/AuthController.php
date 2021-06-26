@@ -19,8 +19,8 @@ class AuthController extends Controller
         ]);
 
         $user = User::where('phone_number', $request->phone_number)
-            ->where('status', 1)
             ->first();
+
         if ($user == null) {
             return $this->response(null, 'Phone number doesn\'t exist', 404);
         }
